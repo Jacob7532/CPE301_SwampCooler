@@ -81,10 +81,73 @@ void setup(){
 void loop(){
 
   statesMachine();
-  
+
 }
 
 
 void statesMachine(){
-  
+
+  adcDisable();
+
+    switch(Cooler_State){
+      
+      case(Off):
+        //button pressed to turn on
+        if(buttonMonitor() == 0){
+          CoolerIdleState();
+        }
+        break;
+
+      case(Idle):
+        //temp and water check
+        temperatureMonitor();
+        humidityMonitor();
+        displayLCD();
+        if(t >= TEMP){
+          RTCFcn();
+          CoolerRunningState();
+        }
+        if(*Data < WATER){
+          CoolerErrorState();
+        }
+        if(buttonMonitor() == 0){
+          //button pressed to turn off
+          CoolerOffState();
+        }
+        break;
+
+       case(Running):
+       //check temp and water
+        temperatureMonitor();
+        humidityMonitor();
+        displayLCD();
+        if(t < TEMP){
+          RTCFon();
+          CoolerIdleState();
+        }
+        if(*Data < WATER){
+          RTCFon();
+          CoolerErrorState();
+        }
+        if(buttonMonitor() == 0){
+          //button pressed to print time.
+          RTCF0n();
+          //also turns off
+          CoolerOffState();
+        }
+        break;
+
+       case(Error):
+        temperatureMonitor();
+        humidityMonitor();
+        displayLCD();
+        if(*Data >= WATER){
+          CoolerIdleState();
+        }
+        if(buttonMonitor() == 0){
+          //button press to turn off
+          CoolerDisableState();
+        }
+        break;
+    }
 }
