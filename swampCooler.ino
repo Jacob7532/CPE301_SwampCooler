@@ -23,20 +23,20 @@ RTC_DS1307 rtc;
 
 
 //variables
-static states Cooler_State;
+static states cooler_State;
 float h, t;
 
 
 //states
-void CoolerOffState();
-void CoolerErrorState();
-void CoolerIdleState();
-void CoolerRunningState();
+void coolerOffState();
+void coolerErrorState();
+void coolerIdleState();
+void coolerRunningState();
 
 
 //headers
 void LED(int pinNumber);
-void adcIn();
+void adcInitialize();
 void adcDisable();
 
 
@@ -64,7 +64,7 @@ void setup(){
   lcd.begin(16, 2)
 
   //cooler
-  CoolerOffState();
+  coolerOffState();
 
   //Enable interrupts
   sei();
@@ -89,12 +89,12 @@ void statesMachine(){
 
   adcDisable();
 
-    switch(Cooler_State){
+    switch(cooler_State){
       
       case(Off):
         //button pressed to turn on
         if(buttonMonitor() == 0){
-          CoolerIdleState();
+          coolerIdleState();
         }
         break;
 
@@ -105,14 +105,14 @@ void statesMachine(){
         displayLCD();
         if(t >= TEMP){
           RTCFcn();
-          CoolerRunningState();
+          coolerRunningState();
         }
         if(*Data < WATER){
-          CoolerErrorState();
+          coolerErrorState();
         }
         if(buttonMonitor() == 0){
           //button pressed to turn off
-          CoolerOffState();
+          coolerOffState();
         }
         break;
 
@@ -122,18 +122,18 @@ void statesMachine(){
         humidityMonitor();
         displayLCD();
         if(t < TEMP){
-          RTCFon();
-          CoolerIdleState();
+          printRCT();
+          coolerIdleState();
         }
         if(*Data < WATER){
-          RTCFon();
-          CoolerErrorState();
+          printRCT();
+          coolerErrorState();
         }
         if(buttonMonitor() == 0){
           //button pressed to print time.
           RTCF0n();
           //also turns off
-          CoolerOffState();
+          coolerOffState();
         }
         break;
 
@@ -142,12 +142,81 @@ void statesMachine(){
         humidityMonitor();
         displayLCD();
         if(*Data >= WATER){
-          CoolerIdleState();
+          coolerIdleState();
         }
         if(buttonMonitor() == 0){
           //button press to turn off
-          CoolerDisableState();
+          coolerDisableState();
         }
         break;
     }
+}
+
+
+//FUNCTIONS
+
+
+void coolerOffState(){
+  
+}
+
+
+void coolerErrorState(){
+  
+}
+
+
+void coolerIdleState(){
+  
+}
+
+
+void coolerRunningState(){
+  
+}
+
+
+void humidityMonitor(){
+  
+}
+
+
+int buttonMonitor(){
+  
+}
+
+
+void displayLCD(){
+  
+}
+
+
+void printRCT(){
+  
+}
+
+
+void adcInitialize(){
+  
+}
+
+
+void adcDisable(){
+  
+}
+
+
+void driveLow(){
+  PORTB = 0b00000000
+  PORTH = 0b00000000
+}
+
+
+//INTERRUPT
+
+
+ISR(ADC_vect){
+  
+  *SRA |= (1 << 6);
+  
 }
