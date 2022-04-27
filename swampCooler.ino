@@ -23,7 +23,7 @@ RTC_DS1307 rtc;
 
 
 //variables
-static states cooler_State;
+static states coolerState;
 float h, t;
 
 
@@ -89,11 +89,11 @@ void statesMachine(){
 
   adcDisable();
 
-    switch(cooler_State){
+    switch(coolerState){
       
       case(Off):
         //button pressed to turn on
-        if(buttonMonitor() == 0){
+        if(button() == 0){
           coolerIdleState();
         }
         break;
@@ -101,7 +101,7 @@ void statesMachine(){
       case(Idle):
         //temp and water check
         temperatureMonitor();
-        humidityMonitor();
+        humidity();
         displayLCD();
         if(t >= TEMP){
           RTCFcn();
@@ -110,7 +110,7 @@ void statesMachine(){
         if(*Data < WATER){
           coolerErrorState();
         }
-        if(buttonMonitor() == 0){
+        if(button() == 0){
           //button pressed to turn off
           coolerOffState();
         }
@@ -119,7 +119,7 @@ void statesMachine(){
        case(Running):
        //check temp and water
         temperatureMonitor();
-        humidityMonitor();
+        humidity();
         displayLCD();
         if(t < TEMP){
           printRCT();
@@ -129,7 +129,7 @@ void statesMachine(){
           printRCT();
           coolerErrorState();
         }
-        if(buttonMonitor() == 0){
+        if(button() == 0){
           //button pressed to print time.
           RTCF0n();
           //also turns off
@@ -139,12 +139,12 @@ void statesMachine(){
 
        case(Error):
         temperatureMonitor();
-        humidityMonitor();
+        humidity();
         displayLCD();
         if(*Data >= WATER){
           coolerIdleState();
         }
-        if(buttonMonitor() == 0){
+        if(button() == 0){
           //button press to turn off
           coolerDisableState();
         }
@@ -158,15 +158,38 @@ void statesMachine(){
 
 void coolerOffState(){
   
+  adcDisable();
+  driveLow();
+  coolerState = Off;
+  //yellow on
+  PORTH = 0b00100000;
+  //motor off
+  PORTA = 0b00000010;
+  
 }
 
 
 void coolerErrorState(){
+
+  driveLow();
+  coolerState = Error;
+  //red on
+  PORTB = 0b00010000;
+  //motor off
+  PORTA = 0b00000010;
   
 }
 
 
 void coolerIdleState(){
+
+  adcInitialize();
+  driveLow();
+  coolerState = Idle;
+  //green on
+  PORTB = 0b00100000;
+  //display to the lcd
+  displayLCD();
   
 }
 
@@ -176,12 +199,12 @@ void coolerRunningState(){
 }
 
 
-void humidityMonitor(){
+void humidity(){
   
 }
 
 
-int buttonMonitor(){
+int button(){
   
 }
 
