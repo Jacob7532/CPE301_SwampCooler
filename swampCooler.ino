@@ -55,6 +55,9 @@ void setup(){
 
   //buttonVent
   DDRH &= ~(1 << PH4);
+
+  //buttonReset
+  DDRB &= ~(1 <<PB6);
   
   //fan
   DDRG |= (1 << PG5);
@@ -62,10 +65,10 @@ void setup(){
   DDRE |= (1 << PE4);
 
   //vent
-  /*DDR |= ();
-  DDR |= ();
-  DDR |= ();
-  DDR |= ();*/
+  DDRC |= (1 << PC1);
+  DDRD |= (1 << PD7);
+  DDRG |= (1 << PG1);
+  DDRL |= (1 << PL7);
 
   //clock
   rtc.begin();
