@@ -106,6 +106,7 @@ void loop(){
 void statesMachine(){
 
   adcDisable();
+  coolerOffState();
 
     switch(coolerState){
       
