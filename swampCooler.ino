@@ -50,7 +50,7 @@ Stepper* ptr=&pitchstepper;
 void setup(){
 
   //lights
-  DDRB |= (1 << PB4); //yellow
+  DDRB |= (1 << PB4); //yellowBCDGLHE
   DDRH |= (1 << PH5); //blue
   DDRB |= (1 << PB5); //red
   DDRH |= (1 << PH6); //green
@@ -181,11 +181,12 @@ void coolerOffState(){
   driveLow();
   coolerState = Off;
   //yellow on
-  PORTH = 0b00100000;
+  PORTB = 0b00100000;
   //motor off
-  PORTA = 0b00000010;
+  PORTG = 0b00000010;
   
 }
+
 
 
 void coolerErrorState(){
@@ -195,7 +196,7 @@ void coolerErrorState(){
   //red on
   PORTB = 0b00010000;
   //motor off
-  PORTA = 0b00000010;
+  PORTG = 0b00000010;
   
 }
 
@@ -206,7 +207,7 @@ void coolerIdleState(){
   driveLow();
   coolerState = Idle;
   //green on
-  PORTB = 0b00100000;
+  PORTH = 0b00100000;
   //display to the lcd
   displayLCD();
   
@@ -220,7 +221,7 @@ void coolerRunningState(){
   //blue on
   PORTH = 0b01000000;
   //motor on
-  PORTA = 0b00001010;
+  PORTG = 0b00001010;
   //display to the lcd
   displayLCD();
   
@@ -354,8 +355,11 @@ void adcDisable(){
 
 
 void driveLow(){
-  PORTB = 0b00000000;
+  PORTC = 0b00000000;
+  PORTD = 0b00000000;
+  PORTE = 0b00000000;
   PORTH = 0b00000000;
+  PORTL = 0b00000000;
 }
 
 
