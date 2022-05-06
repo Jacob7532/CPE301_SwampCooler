@@ -26,7 +26,7 @@ RTC_DS1307 rtc;
 
 
 //variables
-static states coolerState;
+static states coolerState=Off;
 float h, t;
 
 
