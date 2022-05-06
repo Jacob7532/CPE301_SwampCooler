@@ -98,6 +98,7 @@ void setup(){
 
 
 void loop(){
+  coolerOffState();
 
   statesMachine();
 
