@@ -26,7 +26,7 @@ RTC_DS1307 rtc;
 
 
 //variables
-static coolerState
+static coolerState;
 enum states coolerState=Off;
 float h, t;
 
