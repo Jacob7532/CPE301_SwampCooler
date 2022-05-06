@@ -1,7 +1,7 @@
 #include <DHT.h>
 #include <LiquidCrystal.h>
-#include <RTClib.h>
 #include <Stepper.h>
+#include <RTClib.h>
 
 typedef enum{Off, Error, Idle, Running} states;
 
@@ -44,7 +44,7 @@ void adcDisable();
 int buttonReset();
 int buttonVent(Stepper* idk);
 Stepper pitchstepper(200, 36, 38, 40, 42);
-Stepper* ptr=pitchstepper;
+Stepper* ptr=&pitchstepper;
 
 
 void setup(){
@@ -257,10 +257,10 @@ int buttonOn(){
 
   adcDisable();
   //debouncing
-  if((PINB & (1 << PB7))!=0){
+  if((PINB & (1 << PB6))!=0){
     _delay_ms(250);
   }
-  if((PINB & (1 << PB7))!=0){
+  if((PINB & (1 << PB6))!=0){
     return 0;
   }
   else{
@@ -305,6 +305,25 @@ void printRTC(){
 }
 
 
+int buttonVent(Stepper* idk){
+
+  adcDisable();
+  //debouncing
+  if((PINB & (1 << PH4))!=0){
+    _delay_ms(250);
+  }
+  if((PINB & (1 << PH4))!=0){
+    idk->setSpeed(50);
+    return 0;
+  }
+  else{
+    return 1;
+  }
+  adcInitialize();
+  
+}
+
+
 void adcInitialize(){
 
   //bits 0,1,2,3,4 for pin selection
@@ -330,48 +349,15 @@ void adcInitialize(){
 
 void adcDisable(){
   //bit 7 to 0 to disable
+  *SRA = 0;
 }
-
 
 
 void driveLow(){
   PORTB = 0b00000000;
   PORTH = 0b00000000;
 }
-int buttonReset(){
 
-  adcDisable();
-  //debouncing
-  if((PINB & (1 << PB6))!=0){
-    _delay_ms(250);
-  }
-  if((PINB & (1 << PB6))!=0){
-    coolerIdleState();
-    return 0;
-  }
-  else{
-    return 1;
-  }
-  adcInitialize();
-  
-}
-int buttonVent(Stepper* idk){
-
-  adcDisable();
-  //debouncing
-  if((PINB & (1 << PH4))!=0){
-    _delay_ms(250);
-  }
-  if((PINB & (1 << PH4))!=0){
-    idk.etSpeed(50);
-    return 0;
-  }
-  else{
-    return 1;
-  }
-  adcInitialize();
-  
-}
 
 //INTERRUPT
 
